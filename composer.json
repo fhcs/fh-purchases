@@ -1,9 +1,5 @@
 {
     "name": "fitnesshouse/purchases",
-<<<<<<< HEAD
-=======
-    "version": "1.0.1",
->>>>>>> 8608b03ef6350c261ec26cafbb50521f03e56907
     "description": "Purchases manager",
     "license": "MIT",
     "keywords": ["laravel", "purchases"],
