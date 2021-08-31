@@ -10,7 +10,6 @@
             "email": "mihailov.v@fhclub.ru"
         }
     ],
-    "minimum-stability": "stable",
     "require": {
         "php": "^7.3|^8.0",
         "ext-json": "*"
@@ -44,5 +43,7 @@
         "branch-alias": {
             "dev-master": "1.x-dev"
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
