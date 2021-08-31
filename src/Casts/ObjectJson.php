@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Fh\Purchase\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
@@ -9,7 +7,7 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Database\Eloquent\Model;
 
-abstract class CastObjectJson implements CastsAttributes, Arrayable, Jsonable
+abstract class ObjectJson implements CastsAttributes, Arrayable, Jsonable
 {
     /**
      * @var array
@@ -29,9 +27,9 @@ abstract class CastObjectJson implements CastsAttributes, Arrayable, Jsonable
      * @param string $key
      * @param mixed $value
      * @param array $attributes
-     * @return mixed
+     * @return self|null
      */
-    public function get($model, string $key, $value, array $attributes)
+    public function get($model, string $key, $value, array $attributes): ?self
     {
         return $value ? new static(json_decode($value, true)) : null;
     }
@@ -41,7 +39,7 @@ abstract class CastObjectJson implements CastsAttributes, Arrayable, Jsonable
      * @param string $key
      * @param mixed $value
      * @param array $attributes
-     * @return false|mixed|string
+     * @return false|string
      */
     public function set($model, string $key, $value, array $attributes)
     {

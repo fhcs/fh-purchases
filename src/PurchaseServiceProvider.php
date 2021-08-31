@@ -40,7 +40,7 @@ class PurchaseServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(
             __DIR__ . '/../config/purchases.php',
-            'purchase'
+            'purchases'
         );
     }
 }

@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Fh\Purchase\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;

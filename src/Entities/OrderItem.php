@@ -9,9 +9,6 @@ use Fh\Purchase\Support\HideTimestamps;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property string name
- * @property float price
- * @property int quantity
  * @method static self create(array $array)
  */
 class OrderItem extends Model
