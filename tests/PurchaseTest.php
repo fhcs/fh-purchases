@@ -4,7 +4,7 @@ namespace Fh\Purchase\Tests;
 
 use Fh\Purchase\Entities\Invoice;
 use Fh\Purchase\Events\InvoiceCreated;
-use Fh\Purchase\Facades\PurchaseFacade as Purchase;
+use Fh\Purchase\Facades\Purchase;
 use Fh\Purchase\Tests\Fixtures\People;
 use Fh\Purchase\Tests\Fixtures\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;

@@ -10,7 +10,7 @@ use Fh\Purchase\Entities\Invoice;
 use Fh\Purchase\Events\InvoiceCreated;
 use Fh\Purchase\Facades\InvoiceFactoryFacade as InvoiceFactory;
 
-class Purchase
+class PurchaseService
 {
     /**
      * Создает счет на оплату

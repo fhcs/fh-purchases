@@ -5,7 +5,7 @@ namespace Fh\Purchase\Tests;
 use Fh\Purchase\Facades\CustomerFactoryFacade;
 use Fh\Purchase\Facades\InvoiceFactoryFacade;
 use Fh\Purchase\Facades\OrderFactoryFacade;
-use Fh\Purchase\Facades\PurchaseFacade;
+use Fh\Purchase\Facades\Purchase;
 use Fh\Purchase\PurchaseServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 
@@ -35,7 +35,7 @@ abstract class TestCase extends BaseTestCase
             'OrderFactoryFacade' => OrderFactoryFacade::class,
             'CustomerFactoryFacade' => CustomerFactoryFacade::class,
             'InvoiceFactoryFacade' => InvoiceFactoryFacade::class,
-            'PurchaseFacade' => PurchaseFacade::class
+            'Purchase' => Purchase::class
         ];
     }
 }
