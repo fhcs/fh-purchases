@@ -4,7 +4,6 @@ namespace Fh\Purchase\Tests\Entities;
 
 use Fh\Purchase\Entities\Order;
 use Fh\Purchase\Entities\OrderItem;
-use Fh\Purchase\Enums\OrderStatus;
 use Fh\Purchase\Tests\TestCase;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -23,7 +22,6 @@ class OrderTest extends TestCase
         $this->assertDatabaseHas('purchase_orders', [
             'total' => 0,
             'amount' => 0.00,
-            'status' => OrderStatus::NEW
         ]);
         $this->assertArrayNotHasKey('created_at', $order->toArray());
         $this->assertArrayNotHasKey('updated_at', $order->toArray());
@@ -52,6 +50,5 @@ class OrderTest extends TestCase
         $this->assertEquals(1, $order->items->count());
         $this->assertEquals($order->items()->first()->quantity, $order->total);
         $this->assertEquals($order->items()->first()->quantity * $order->items()->first()->price, $order->amount);
-        $this->assertEquals(OrderStatus::NEW, $order->status);
     }
 }

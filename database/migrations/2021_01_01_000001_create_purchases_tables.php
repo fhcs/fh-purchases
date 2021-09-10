@@ -1,6 +1,5 @@
 <?php
 
-use Fh\Purchase\Enums\OrderStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -25,7 +24,6 @@ class CreatePurchasesTables extends Migration
             $table->uuid('uuid')->primary()->comment('Уникальный идентификатор заказа');
             $table->integer('total')->default(0)->comment('Количество позиций в заказе.');
             $table->decimal('amount')->default(0.00)->comment('Сумма заказа в рублях');
-            $table->string('status')->nullable()->default(OrderStatus::UNDEF)->comment('Статус оплаты заказа');
 
             $table->timestamps();
         });
@@ -49,6 +47,8 @@ class CreatePurchasesTables extends Migration
         Schema::create('purchase_invoices', function (Blueprint $table) {
             $table->id();
             $table->json('payment')->nullable()->comment('Детали платежа в json формате');
+            $table->string('request')->nullable()->comment('Обработчик запроса');
+            $table->string('status')->nullable()->comment('Статус оплаты заказа');
             $table->timestamp('closed_at')->nullable()->comment('Дата закрытия счета');
 
             $table->timestamps();

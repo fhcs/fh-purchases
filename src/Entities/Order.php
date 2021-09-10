@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Fh\Purchase\Entities;
 
-use Fh\Purchase\Enums\OrderStatus;
 use Fh\Purchase\Support\HasUuid;
 use Fh\Purchase\Support\HideTimestamps;
 use Illuminate\Database\Eloquent\Collection;
@@ -17,7 +16,6 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property Collection items
  * @property int total
  * @property float amount
- * @property string status
  * @property string uuid
  */
 class Order extends Model
@@ -34,7 +32,6 @@ class Order extends Model
     protected $attributes = [
         'total' => 0,
         'amount' => 0.00,
-        'status' => OrderStatus::NEW
     ];
 
     /**
