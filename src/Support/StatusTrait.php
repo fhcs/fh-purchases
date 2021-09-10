@@ -12,12 +12,15 @@ trait StatusTrait
      */
     public static function status(string $state): string
     {
-        if (defined('self::STATUS')
-            && is_array(self::STATUS)
-            && array_key_exists($state, self::STATUS)) {
-            return self::STATUS[$state];
+        if (array_key_exists($state, self::states())) {
+            return self::states()[$state];
         }
 
         return $state;
     }
+
+    /**
+     * @return array
+     */
+    abstract protected static function states(): array;
 }

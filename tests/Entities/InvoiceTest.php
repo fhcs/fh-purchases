@@ -2,6 +2,7 @@
 
 namespace Fh\Purchase\Tests\Entities;
 
+use Carbon\Carbon;
 use Fh\Purchase\Casts\Payment;
 use Fh\Purchase\Entities\Customer;
 use Fh\Purchase\Entities\Invoice;
@@ -140,8 +141,10 @@ class InvoiceTest extends TestCase
 
         $this->assertNotNull($this->invoice->payment);
         $this->assertDatabaseHas('purchase_invoices', [
-            'payment' => json_encode($this->payment['payment'])
+            'payment' => json_encode($this->payment['payment']),
+            'status' => OrderStatus::status($this->payment['payment']['state']),
         ]);
+        $this->assertNotEquals(OrderStatus::UNDEF, $this->invoice->status);
         $this->assertInstanceOf(Payment::class, $this->invoice->payment);
     }
 
@@ -177,6 +180,20 @@ class InvoiceTest extends TestCase
 
         $this->assertInstanceOf(Collection::class, $this->invoice->context());
         $this->assertInstanceOf(OrderItem::class, $this->invoice->context()->first());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_closed(): void
+    {
+        $this->invoice->close();
+
+        $this->assertTrue($this->invoice->isClosed());
+        $this->assertDatabaseHas('purchase_invoices', [
+            'status' => OrderStatus::CLOSED,
+            'closed_at' => Carbon::now()->toAtomString()
+        ]);
     }
 
     protected function setUp(): void

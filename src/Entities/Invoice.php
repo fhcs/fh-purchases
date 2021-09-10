@@ -115,7 +115,14 @@ class Invoice extends Model
         self::update([
             'payment' => $parameters,
             'status' => $paymentStatus,
-            'closed_at' => OrderStatus::isFinalState($paymentStatus) ? Carbon::now()->toAtomString() : null
+        ]);
+    }
+
+    public function close()
+    {
+        self::update([
+            'status' => OrderStatus::CLOSED,
+            'closed_at' => Carbon::now()->toAtomString(),
         ]);
     }
 
@@ -136,5 +143,13 @@ class Invoice extends Model
         $context = $this->order->items;
 
         return ($context->count() === 1) ? $context->first() : $context;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isClosed(): bool
+    {
+        return $this->status === OrderStatus::CLOSED;
     }
 }
