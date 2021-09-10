@@ -9,10 +9,12 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\LazyCollection;
 
 /**
  * @method static Invoice create(array $attributes = [])
  * @method static whereOrderId(string $orderId)
+ * @method static LazyCollection cursor()
  * @property Payment|null payment
  * @property Order order
  * @property Customer customer
