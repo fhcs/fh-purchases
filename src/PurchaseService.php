@@ -9,6 +9,7 @@ use Fh\Purchase\Contracts\PayableProduct;
 use Fh\Purchase\Entities\Invoice;
 use Fh\Purchase\Events\InvoiceCreated;
 use Fh\Purchase\Facades\InvoiceFactoryFacade as InvoiceFactory;
+use Illuminate\Support\Collection;
 
 class PurchaseService
 {
@@ -24,6 +25,23 @@ class PurchaseService
         return tap(InvoiceFactory::createInvoice($customer, $product), function ($invoice) {
             event(new InvoiceCreated($invoice));
         });
+    }
+
+    /**
+     * @param string $byOrderId
+     * @return Collection|Invoice|null
+     */
+    public function invoices(string $byOrderId = '')
+    {
+        $result = Invoice::cursor();
+
+        if ($byOrderId) {
+            return $result->first(function (Invoice $invoice) use ($byOrderId) {
+                return $invoice->getOrderId() === $byOrderId;
+            });
+        }
+
+        return $result->collect();
     }
 
 //    /**

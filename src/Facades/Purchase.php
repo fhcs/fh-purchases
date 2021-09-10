@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static Invoice createInvoice(PayableCustomer $customer, PayableProduct $product)
+ * @method static invoices(string $byOrderId = '')
  */
 class Purchase extends Facade
 {
