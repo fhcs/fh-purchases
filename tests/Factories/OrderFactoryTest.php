@@ -4,7 +4,6 @@ namespace Fh\Purchase\Tests\Factories;
 
 use Fh\Purchase\Entities\Order;
 use Fh\Purchase\Entities\OrderItem;
-use Fh\Purchase\Enums\OrderStatus;
 use Fh\Purchase\Facades\OrderFactoryFacade as OrderFactory;
 use Fh\Purchase\Tests\Fixtures\Product;
 use Fh\Purchase\Tests\TestCase;
@@ -34,7 +33,6 @@ class OrderFactoryTest extends TestCase
         $this->assertEquals(1, $order->items->count());
         $this->assertEquals($order->items()->first()->quantity, $order->total);
         $this->assertEquals($order->items()->first()->quantity * $order->items()->first()->price, $order->amount);
-        $this->assertEquals(OrderStatus::NEW, $order->status);
     }
 
     /**
@@ -61,7 +59,6 @@ class OrderFactoryTest extends TestCase
         $this->assertEquals(1, $order->items->count());
         $this->assertEquals($order->items()->first()->quantity, $order->total);
         $this->assertEquals($order->items()->first()->quantity * $order->items()->first()->price, $order->amount);
-        $this->assertEquals(OrderStatus::NEW, $order->status);
     }
 
     /**
