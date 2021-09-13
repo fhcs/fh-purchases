@@ -35,9 +35,6 @@ class Invoice extends Model
     protected $casts = [
         'payment' => Payment::class,
     ];
-    protected $hidden = [
-        'request'
-    ];
 
     /**
      * @param string $orderId
@@ -78,14 +75,6 @@ class Invoice extends Model
     public function getAmount(): float
     {
         return $this->order->amount;
-    }
-
-    /**
-     * @param string $requestHandler
-     */
-    public function setRequestHandler(string $requestHandler)
-    {
-        self::update(['request' => $requestHandler]);
     }
 
     /**
