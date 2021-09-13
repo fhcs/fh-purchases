@@ -57,7 +57,6 @@ class InvoiceTest extends TestCase
 
         $this->assertArrayNotHasKey('created_at', $this->invoice->toArray());
         $this->assertArrayNotHasKey('updated_at', $this->invoice->toArray());
-        $this->assertArrayNotHasKey('request', $this->invoice->toArray());
     }
 
     /**
@@ -108,19 +107,6 @@ class InvoiceTest extends TestCase
     {
         $invoice = Invoice::findByOrderId($this->order->getId());
         $this->assertInstanceOf(Invoice::class, $invoice);
-    }
-
-    /**
-     * @test
-     */
-    public function it_can_be_set_request_handler(): void
-    {
-        $this->invoice->setRequestHandler('request_handler');
-
-        $this->assertDatabaseHas('purchase_invoices', [
-            'request' => 'request_handler',
-        ]);
-        $this->assertIsString($this->invoice->request);
     }
 
     /**

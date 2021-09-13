@@ -47,7 +47,6 @@ class CreatePurchasesTables extends Migration
         Schema::create('purchase_invoices', function (Blueprint $table) {
             $table->id();
             $table->json('payment')->nullable()->comment('Детали платежа в json формате');
-            $table->string('request')->nullable()->comment('Обработчик запроса');
             $table->string('status')->nullable()->comment('Статус оплаты заказа');
             $table->timestamp('closed_at')->nullable()->comment('Дата закрытия счета');
 
