@@ -4,6 +4,7 @@ namespace Fh\Purchase\Entities;
 
 use Fh\Purchase\Casts\Payment;
 use Fh\Purchase\Enums\OrderStatus;
+use Fh\Purchase\Notifications\PurchaseNotifiable;
 use Fh\Purchase\Support\HideTimestamps;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -25,7 +26,7 @@ use Illuminate\Support\LazyCollection;
  */
 class Invoice extends Model
 {
-    use HideTimestamps;
+    use HideTimestamps, PurchaseNotifiable;
 
     protected $table = 'purchase_invoices';
     protected $guarded = [];
