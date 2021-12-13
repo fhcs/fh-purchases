@@ -23,6 +23,7 @@ use Illuminate\Support\LazyCollection;
  * @property int id
  * @property string $request
  * @property string $status
+ * @property string $target
  */
 class Invoice extends Model
 {
@@ -60,6 +61,14 @@ class Invoice extends Model
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class, 'order_id', 'uuid');
+    }
+
+    /**
+     * @return string
+     */
+    public function getTarget(): string
+    {
+        return $this->target;
     }
 
     /**
