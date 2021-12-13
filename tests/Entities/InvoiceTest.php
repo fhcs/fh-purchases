@@ -17,6 +17,8 @@ class InvoiceTest extends TestCase
 {
     use RefreshDatabase;
 
+    const TARGET_PAYMENT = 'Тестовая оплата';
+
     /**
      * @var Invoice
      */
@@ -44,6 +46,7 @@ class InvoiceTest extends TestCase
         $this->assertInstanceOf(Invoice::class, $this->invoice);
         $this->assertDatabaseCount('purchase_invoices', 1);
         $this->assertDatabaseHas('purchase_invoices', [
+            'target' => self::TARGET_PAYMENT,
             'customer_id' => $this->customer->id,
             'order_id' => $this->order->uuid,
             'status' => OrderStatus::NEW
@@ -127,6 +130,7 @@ class InvoiceTest extends TestCase
 
         $this->assertNotNull($this->invoice->payment);
         $this->assertDatabaseHas('purchase_invoices', [
+            'target' => self::TARGET_PAYMENT,
             'payment' => json_encode($this->payment['payment']),
             'status' => OrderStatus::status($this->payment['payment']['state']),
         ]);
@@ -177,6 +181,7 @@ class InvoiceTest extends TestCase
 
         $this->assertTrue($this->invoice->isClosed());
         $this->assertDatabaseHas('purchase_invoices', [
+            'target' => self::TARGET_PAYMENT,
             'status' => OrderStatus::CLOSED,
             'closed_at' => Carbon::now()->toAtomString()
         ]);
@@ -188,6 +193,7 @@ class InvoiceTest extends TestCase
         $this->customer = factory(Customer::class)->create();
         $this->order = factory(Order::class)->create();
         $this->invoice = Invoice::create([
+            'target' => self::TARGET_PAYMENT,
             'customer_id' => $this->customer->id,
             'order_id' => $this->order->uuid,
         ]);

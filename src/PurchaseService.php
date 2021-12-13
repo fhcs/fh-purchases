@@ -18,11 +18,12 @@ class PurchaseService
      *
      * @param PayableCustomer $customer
      * @param PayableProduct $product
+     * @param string $target
      * @return Invoice
      */
-    public function createInvoice(PayableCustomer $customer, PayableProduct $product): Invoice
+    public function createInvoice(PayableCustomer $customer, PayableProduct $product, string $target = ''): Invoice
     {
-        return tap(InvoiceFactory::createInvoice($customer, $product), function ($invoice) {
+        return tap(InvoiceFactory::createInvoice($customer, $product, $target), function ($invoice) {
             event(new InvoiceCreated($invoice));
         });
     }
@@ -43,29 +44,4 @@ class PurchaseService
 
         return $result->collect();
     }
-
-//    /**
-//     * @param string $typeRequest
-//     * @param Invoice $invoice
-//     * @param string $paymentSystem
-//     * @return QueryBuilder
-//     */
-//    public function paymentQuery(string $typeRequest, Invoice $invoice, string $paymentSystem = ''): QueryBuilder
-//    {
-//        return $this->getPaymentQuery($paymentSystem, $invoice);
-//    }
-//
-//    /**
-//     * @param string $paymentSystem
-//     * @param Invoice $invoice
-//     * @return QueryBuilder
-//     */
-//    private function getPaymentQuery(string $paymentSystem, Invoice $invoice): QueryBuilder
-//    {
-//        return PaymentQuery::paymentSystem($paymentSystem)->create(function (QueryBuilder $query) use ($invoice) {
-//            $query->amount($invoice->getAmount());
-//            $query->orderId($invoice->getOrderId());
-//            $query->customer($invoice->customer->toArray());
-//        });
-//    }
 }

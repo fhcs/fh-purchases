@@ -15,14 +15,16 @@ class InvoiceFactory
     /**
      * @param PayableCustomer $customer
      * @param PayableProduct $product
+     * @param string $target
      * @return Invoice
      */
-    public function createInvoice(PayableCustomer $customer, PayableProduct $product): Invoice
+    public function createInvoice(PayableCustomer $customer, PayableProduct $product, string $target = ''): Invoice
     {
         $order = OrderFactory::createOrder($product);
         $customer = CustomerFactory::defineCustomer($customer);
 
         $invoice = Invoice::create([
+            'target' => $target,
             'customer_id' => $customer->getId(),
             'order_id' => $order->getId(),
         ]);

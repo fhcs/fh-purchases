@@ -11,7 +11,7 @@ use Fh\Purchase\Factories\InvoiceFactory;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static Invoice createInvoice(PayableCustomer $customer, PayableProduct $product)
+ * @method static Invoice createInvoice(PayableCustomer $customer, PayableProduct $product, string $target = '')
  */
 class InvoiceFactoryFacade extends Facade
 {
