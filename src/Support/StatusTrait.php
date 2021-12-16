@@ -8,7 +8,7 @@ trait StatusTrait
 {
     /**
      * @param string $state
-     * @return mixed|string
+     * @return string
      */
     public static function status(string $state): string
     {
@@ -22,5 +22,12 @@ trait StatusTrait
     /**
      * @return array
      */
-    abstract protected static function states(): array;
+    protected static function states(): array
+    {
+        $class = new \ReflectionClass(self::class);
+        if ($class->hasConstant('STATUS')) {
+            return self::STATUS;
+        }
+        return [];
+    }
 }
