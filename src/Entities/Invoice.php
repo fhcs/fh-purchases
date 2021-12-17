@@ -109,13 +109,9 @@ class Invoice extends Model
             $parameters = $parameters['payment'];
         }
 
-        $paymentStatus = $parameters['state']
-            ? OrderStatus::status($parameters['state'])
-            : OrderStatus::UNDEF;
-
         self::update([
             'payment' => $parameters,
-            'status' => $paymentStatus,
+            'status' => OrderStatus::TREATED,
         ]);
     }
 
