@@ -132,7 +132,7 @@ class InvoiceTest extends TestCase
         $this->assertDatabaseHas('purchase_invoices', [
             'target' => self::TARGET_PAYMENT,
             'payment' => json_encode($this->payment['payment']),
-            'status' => OrderStatus::status($this->payment['payment']['state']),
+            'status' => OrderStatus::TREATED,
         ]);
         $this->assertNotEquals(OrderStatus::UNDEF, $this->invoice->status);
         $this->assertInstanceOf(Payment::class, $this->invoice->payment);
@@ -183,7 +183,7 @@ class InvoiceTest extends TestCase
         $this->assertDatabaseHas('purchase_invoices', [
             'target' => self::TARGET_PAYMENT,
             'status' => OrderStatus::CLOSED,
-            'closed_at' => Carbon::now()->toAtomString()
+            'closed_at' => Carbon::now()
         ]);
     }
 
