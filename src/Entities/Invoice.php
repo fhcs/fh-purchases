@@ -115,11 +115,14 @@ class Invoice extends Model
         ]);
     }
 
+    /**
+     * @return void
+     */
     public function close()
     {
         self::update([
             'status' => OrderStatus::CLOSED,
-            'closed_at' => Carbon::now()->toAtomString(),
+            'closed_at' => Carbon::now(),
         ]);
     }
 
