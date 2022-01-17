@@ -152,4 +152,12 @@ class Invoice extends Model
     {
         return $this->status === OrderStatus::CLOSED;
     }
+
+    /**
+     * @return bool
+     */
+    public function isPaid(): bool
+    {
+        return $this->status === OrderStatus::PAID;
+    }
 }
