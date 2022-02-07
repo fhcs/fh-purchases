@@ -81,8 +81,17 @@ class Invoice extends Model
 
     /**
      * @return float
+     * @deprecated
      */
     public function getAmount(): float
+    {
+        return $this->order->amount;
+    }
+
+    /**
+     * @return float
+     */
+    public function getOrderAmount(): float
     {
         return $this->order->amount;
     }

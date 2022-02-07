@@ -75,7 +75,7 @@ class InvoiceTest extends TestCase
      */
     public function it_can_be_get_amount(): void
     {
-        $this->assertEquals($this->invoice->getAmount(), $this->order->amount);
+        $this->assertEquals($this->invoice->getOrderAmount(), $this->order->amount);
     }
 
     public function testCustomer()
@@ -193,7 +193,7 @@ class InvoiceTest extends TestCase
                 'showOrderId' => date_timestamp_get(date_create()),
                 'paymentId' => '1234567890',
                 'account' => $this->customer->account,
-                'amount' => $this->invoice->getAmount(),
+                'amount' => $this->invoice->getOrderAmount(),
                 'state' => 'end',
                 'marketPlace' => 000000000,
                 'paymentMethod' => 'ac',
