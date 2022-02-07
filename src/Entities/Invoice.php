@@ -136,13 +136,11 @@ class Invoice extends Model
     }
 
     /**
-     * @return Collection|OrderItem
+     * @return Collection
      */
-    public function context()
+    public function orderItems(): Collection
     {
-        $context = $this->order->items;
-
-        return ($context->count() === 1) ? $context->first() : $context;
+        return $this->order->items;
     }
 
     /**

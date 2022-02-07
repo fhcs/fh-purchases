@@ -145,31 +145,21 @@ class InvoiceTest extends TestCase
     {
         $this->invoice->setStatus('end');
         $this->assertEquals(OrderStatus::END, $this->invoice->status);
+        $this->assertEquals(OrderStatus::PAID, $this->invoice->status);
     }
 
     /**
      * @test
      */
-    public function it_can_be_get_context(): void
-    {
-        $orderItem = factory(OrderItem::class)->create();
-        $this->order->addOrderItem($orderItem);
-
-        $this->assertInstanceOf(OrderItem::class, $this->invoice->context());
-    }
-
-    /**
-     * @test
-     */
-    public function it_can_be_context_collection(): void
+    public function it_can_be_order_items_collection(): void
     {
         $orderItems = factory(OrderItem::class, 3)->create();
         foreach ($orderItems as $item) {
             $this->order->addOrderItem($item);
         }
 
-        $this->assertInstanceOf(Collection::class, $this->invoice->context());
-        $this->assertInstanceOf(OrderItem::class, $this->invoice->context()->first());
+        $this->assertInstanceOf(Collection::class, $this->invoice->orderItems());
+        $this->assertInstanceOf(OrderItem::class, $this->invoice->orderItems()->first());
     }
 
     /**
