@@ -125,6 +125,30 @@ class Invoice extends Model
     }
 
     /**
+     * @return mixed|null
+     */
+    public function getPaymentId()
+    {
+        return is_null($this->payment) ? null : $this->payment->paymentId;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getPaymentAmount()
+    {
+        return is_null($this->payment) ? null : $this->payment->amount;
+    }
+
+    /**
+     * @return mixed|null
+     */
+    public function getPaymentState()
+    {
+        return is_null($this->payment) ? null : $this->payment->state;
+    }
+
+    /**
      * @return void
      */
     public function close()

@@ -73,7 +73,7 @@ class InvoiceTest extends TestCase
     /**
      * @test
      */
-    public function it_can_be_get_amount(): void
+    public function it_can_be_get_order_amount(): void
     {
         $this->assertEquals($this->invoice->getOrderAmount(), $this->order->amount);
     }
@@ -136,6 +136,39 @@ class InvoiceTest extends TestCase
         ]);
         $this->assertNotEquals(OrderStatus::UNDEF, $this->invoice->status);
         $this->assertInstanceOf(Payment::class, $this->invoice->payment);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_get_payment_id(): void
+    {
+        $this->assertNull($this->invoice->getPaymentId());
+
+        $this->invoice->setPayment($this->payment);
+        $this->assertEquals($this->payment['payment']['paymentId'], $this->invoice->getPaymentId());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_get_payment_amount(): void
+    {
+        $this->assertNull($this->invoice->getPaymentAmount());
+
+        $this->invoice->setPayment($this->payment);
+        $this->assertEquals($this->payment['payment']['amount'], $this->invoice->getPaymentAmount());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_get_payment_state(): void
+    {
+        $this->assertNull($this->invoice->getPaymentState());
+
+        $this->invoice->setPayment($this->payment);
+        $this->assertEquals($this->payment['payment']['state'], $this->invoice->getPaymentState());
     }
 
     /**
