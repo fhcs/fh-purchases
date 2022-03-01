@@ -3,7 +3,7 @@
 namespace Fh\Purchase\Tests\Entities;
 
 use Carbon\Carbon;
-use Fh\Purchase\Casts\Payment;
+use Fh\Purchase\Casts\PaymentContext;
 use Fh\Purchase\Entities\Customer;
 use Fh\Purchase\Entities\Invoice;
 use Fh\Purchase\Entities\Order;
@@ -135,7 +135,7 @@ class InvoiceTest extends TestCase
             'status' => OrderStatus::TREATED,
         ]);
         $this->assertNotEquals(OrderStatus::UNDEF, $this->invoice->status);
-        $this->assertInstanceOf(Payment::class, $this->invoice->payment);
+        $this->assertInstanceOf(PaymentContext::class, $this->invoice->payment);
     }
 
     /**

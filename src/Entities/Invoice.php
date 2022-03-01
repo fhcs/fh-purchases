@@ -2,7 +2,7 @@
 
 namespace Fh\Purchase\Entities;
 
-use Fh\Purchase\Casts\Payment;
+use Fh\Purchase\Casts\PaymentContext;
 use Fh\Purchase\Enums\OrderStatus;
 use Fh\Purchase\Notifications\PurchaseNotifiable;
 use Fh\Purchase\Support\HideTimestamps;
@@ -16,7 +16,7 @@ use Illuminate\Support\LazyCollection;
  * @method static Invoice create(array $attributes = [])
  * @method static whereOrderId(string $orderId)
  * @method static LazyCollection cursor()
- * @property Payment|null payment
+ * @property PaymentContext|null payment
  * @property Order order
  * @property Customer customer
  * @property string order_id
@@ -35,7 +35,7 @@ class Invoice extends Model
         'status' => OrderStatus::NEW
     ];
     protected $casts = [
-        'payment' => Payment::class,
+        'payment' => PaymentContext::class,
     ];
 
     /**

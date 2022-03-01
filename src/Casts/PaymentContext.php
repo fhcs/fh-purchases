@@ -7,7 +7,7 @@ namespace Fh\Purchase\Casts;
  * @property mixed|null $amount
  * @property mixed|null $state
  */
-class Payment extends ObjectJson
+class PaymentContext extends ObjectJson
 {
 
 }

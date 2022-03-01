@@ -3,7 +3,7 @@
 namespace Fh\Purchase\Tests\Casts;
 
 use Fh\Purchase\Casts\ObjectJson;
-use Fh\Purchase\Casts\Payment;
+use Fh\Purchase\Casts\PaymentContext;
 use Fh\Purchase\Tests\TestCase;
 
 class ObjectJsonTest extends TestCase
@@ -15,7 +15,7 @@ class ObjectJsonTest extends TestCase
     private $params;
 
     /**
-     * @var Payment
+     * @var PaymentContext
      */
     private $objectJson;
 
