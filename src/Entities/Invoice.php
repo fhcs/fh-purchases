@@ -2,8 +2,8 @@
 
 namespace Fh\Purchase\Entities;
 
-use Fh\Purchase\Casts\PaymentContext;
 use Fh\Purchase\Enums\OrderStatus;
+use Fh\Purchase\Enums\PaymentStatus;
 use Fh\Purchase\Notifications\PurchaseNotifiable;
 use Fh\Purchase\Support\HideTimestamps;
 use Illuminate\Database\Eloquent\Collection;
@@ -16,7 +16,7 @@ use Illuminate\Support\LazyCollection;
  * @method static Invoice create(array $attributes = [])
  * @method static whereOrderId(string $orderId)
  * @method static LazyCollection cursor()
- * @property PaymentContext|null payment
+ * @property Payment|null payment
  * @property Order order
  * @property Customer customer
  * @property string order_id
@@ -33,9 +33,6 @@ class Invoice extends Model
     protected $guarded = [];
     protected $attributes = [
         'status' => OrderStatus::NEW
-    ];
-    protected $casts = [
-        'payment' => PaymentContext::class,
     ];
 
     /**
@@ -82,6 +79,7 @@ class Invoice extends Model
     /**
      * @return float
      * @deprecated
+     * @see getOrderAmount
      */
     public function getAmount(): float
     {
@@ -118,34 +116,76 @@ class Invoice extends Model
             $parameters = $parameters['payment'];
         }
 
-        self::update([
-            'payment' => $parameters,
-            'status' => OrderStatus::TREATED,
-        ]);
+        $payment = Payment::updateOrInsert($parameters);
+
+        $this->setStatus(
+            PaymentStatus::isFinalState($payment->status)
+                ? OrderStatus::TREATED
+                : OrderStatus::PROCESSING
+        )
+            ->payment()
+            ->associate($payment)
+            ->save();
     }
 
     /**
-     * @return mixed|null
+     * @return BelongsTo
      */
-    public function getPaymentId()
+    public function payment(): BelongsTo
     {
-        return is_null($this->payment) ? null : $this->payment->paymentId;
+        return $this->belongsTo(Payment::class);
     }
 
     /**
-     * @return mixed|null
+     * @param string $state
+     * @return Invoice
      */
-    public function getPaymentAmount()
+    public function setStatus(string $state): Invoice
+    {
+        self::update(['status' => OrderStatus::status($state)]);
+
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getPaymentId(): ?int
+    {
+        return is_null($this->payment) ? null : $this->payment->id;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getPaymentAmount(): ?float
     {
         return is_null($this->payment) ? null : $this->payment->amount;
     }
 
     /**
-     * @return mixed|null
+     * @return string|null
      */
-    public function getPaymentState()
+    public function getPaymentStatus(): ?string
     {
-        return is_null($this->payment) ? null : $this->payment->state;
+        return is_null($this->payment) ? null : $this->payment->status;
+    }
+
+    /**
+     * @return string|null
+     * @deprecated
+     * @see getPaymentStatus
+     */
+    public function getPaymentState(): ?string
+    {
+        if (!is_null($payment = $this->payment)) {
+            $context = $payment->context;
+            if (isset($context['state'])) {
+                return $context['state'];
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -157,15 +197,6 @@ class Invoice extends Model
             'status' => OrderStatus::CLOSED,
             'closed_at' => Carbon::now(),
         ]);
-    }
-
-    /**
-     * @param string $state
-     * @return void
-     */
-    public function setStatus(string $state)
-    {
-        self::update(['status' => OrderStatus::status($state)]);
     }
 
     /**

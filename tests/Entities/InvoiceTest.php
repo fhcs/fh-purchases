@@ -3,19 +3,21 @@
 namespace Fh\Purchase\Tests\Entities;
 
 use Carbon\Carbon;
-use Fh\Purchase\Casts\PaymentContext;
 use Fh\Purchase\Entities\Customer;
 use Fh\Purchase\Entities\Invoice;
 use Fh\Purchase\Entities\Order;
 use Fh\Purchase\Entities\OrderItem;
+use Fh\Purchase\Entities\Payment;
 use Fh\Purchase\Enums\OrderStatus;
+use Fh\Purchase\Enums\PaymentStatus;
 use Fh\Purchase\Tests\TestCase;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 
 class InvoiceTest extends TestCase
 {
-    use RefreshDatabase;
+    use RefreshDatabase, WithFaker;
 
     const TARGET_PAYMENT = 'Тестовая оплата';
 
@@ -36,7 +38,7 @@ class InvoiceTest extends TestCase
     /**
      * @var array
      */
-    private $payment;
+    private $paymentData;
 
     /**
      * @test
@@ -76,6 +78,7 @@ class InvoiceTest extends TestCase
     public function it_can_be_get_order_amount(): void
     {
         $this->assertEquals($this->invoice->getOrderAmount(), $this->order->amount);
+        $this->assertEquals($this->invoice->getAmount(), $this->order->amount);
     }
 
     public function testCustomer()
@@ -126,16 +129,16 @@ class InvoiceTest extends TestCase
      */
     public function it_can_be_set_payment(): void
     {
-        $this->invoice->setPayment($this->payment);
+        $this->invoice->setPayment($this->paymentData);
 
         $this->assertNotNull($this->invoice->payment);
         $this->assertDatabaseHas('purchase_invoices', [
             'target' => self::TARGET_PAYMENT,
-            'payment' => json_encode($this->payment['payment']),
             'status' => OrderStatus::TREATED,
+            'payment_id' => $this->paymentData['payment']['paymentId'],
         ]);
         $this->assertNotEquals(OrderStatus::UNDEF, $this->invoice->status);
-        $this->assertInstanceOf(PaymentContext::class, $this->invoice->payment);
+        $this->assertInstanceOf(Payment::class, $this->invoice->payment);
     }
 
     /**
@@ -145,8 +148,8 @@ class InvoiceTest extends TestCase
     {
         $this->assertNull($this->invoice->getPaymentId());
 
-        $this->invoice->setPayment($this->payment);
-        $this->assertEquals($this->payment['payment']['paymentId'], $this->invoice->getPaymentId());
+        $this->invoice->setPayment($this->paymentData);
+        $this->assertEquals($this->paymentData['payment']['paymentId'], $this->invoice->getPaymentId());
     }
 
     /**
@@ -156,8 +159,22 @@ class InvoiceTest extends TestCase
     {
         $this->assertNull($this->invoice->getPaymentAmount());
 
-        $this->invoice->setPayment($this->payment);
-        $this->assertEquals($this->payment['payment']['amount'], $this->invoice->getPaymentAmount());
+        $this->invoice->setPayment($this->paymentData);
+        $this->assertEquals($this->paymentData['payment']['amount'], $this->invoice->getPaymentAmount());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_get_payment_status(): void
+    {
+        $this->assertNull($this->invoice->getPaymentStatus());
+
+        $this->invoice->setPayment($this->paymentData);
+        $this->assertEquals(
+            PaymentStatus::status($this->paymentData['payment']['state']),
+            $this->invoice->getPaymentStatus()
+        );
     }
 
     /**
@@ -167,14 +184,17 @@ class InvoiceTest extends TestCase
     {
         $this->assertNull($this->invoice->getPaymentState());
 
-        $this->invoice->setPayment($this->payment);
-        $this->assertEquals($this->payment['payment']['state'], $this->invoice->getPaymentState());
+        $this->invoice->setPayment($this->paymentData);
+        $this->assertEquals(
+            $this->paymentData['payment']['state'],
+            $this->invoice->getPaymentState()
+        );
     }
 
     /**
      * @test
      */
-    public function it_can_be_set_status(): void
+    public function it_can_be_set_invoice_status(): void
     {
         $this->invoice->setStatus('end');
         $this->assertEquals(OrderStatus::END, $this->invoice->status);
@@ -210,27 +230,53 @@ class InvoiceTest extends TestCase
         ]);
     }
 
+    /**
+     * @test
+     */
+    public function it_can_be_is_paid(): void
+    {
+        $this->assertFalse($this->invoice->isPaid());
+
+        $this->invoice->setStatus(OrderStatus::PAID);
+        $this->assertTrue($this->invoice->isPaid());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_get_target(): void
+    {
+        $this->assertEquals(self::TARGET_PAYMENT, $this->invoice->getTarget());
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
         $this->customer = factory(Customer::class)->create();
         $this->order = factory(Order::class)->create();
+
+        $orderItems = factory(OrderItem::class, 3)->create();
+        foreach ($orderItems as $item) {
+            $this->order->addOrderItem($item);
+        }
+
         $this->invoice = Invoice::create([
             'target' => self::TARGET_PAYMENT,
             'customer_id' => $this->customer->id,
             'order_id' => $this->order->uuid,
         ]);
-        $this->payment = [
+
+        $this->paymentData = [
             'payment' => [
                 'orderId' => $this->invoice->getOrderId(),
                 'showOrderId' => date_timestamp_get(date_create()),
-                'paymentId' => '1234567890',
+                'paymentId' => $this->faker->randomNumber(9),
                 'account' => $this->customer->account,
                 'amount' => $this->invoice->getOrderAmount(),
                 'state' => 'end',
-                'marketPlace' => 000000000,
+                'marketPlace' => $this->faker->randomNumber(7),
                 'paymentMethod' => 'ac',
-                'stateDate' => '2021-05-18T15:48:32.721+03:00',
+                'stateDate' => $this->faker->dateTime()->format('Y-m-d\TH:i:sP'),
                 'email' => $this->customer->email,
                 'phone' => $this->customer->phone,
                 'details' => 'test',
