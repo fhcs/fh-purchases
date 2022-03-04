@@ -35,6 +35,10 @@ class Payment extends Model
      */
     public static function updateOrInsert(array $attributes, string $paymentSystem = ''): Payment
     {
+        if (array_key_exists('payment', $attributes)) {
+            $attributes = $attributes['payment'];
+        }
+
         return self::updateOrCreate([
             'id' => $attributes['paymentId'],
             'system' => $paymentSystem ?? config('payment.system') ?? '',

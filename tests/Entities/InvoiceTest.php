@@ -129,7 +129,7 @@ class InvoiceTest extends TestCase
      */
     public function it_can_be_set_payment(): void
     {
-        $this->invoice->setPayment($this->paymentData);
+        $this->invoice->setPayment(Payment::updateOrInsert($this->paymentData));
 
         $this->assertNotNull($this->invoice->payment);
         $this->assertDatabaseHas('purchase_invoices', [
@@ -148,7 +148,7 @@ class InvoiceTest extends TestCase
     {
         $this->assertNull($this->invoice->getPaymentId());
 
-        $this->invoice->setPayment($this->paymentData);
+        $this->invoice->setPayment(Payment::updateOrInsert($this->paymentData));
         $this->assertEquals($this->paymentData['payment']['paymentId'], $this->invoice->getPaymentId());
     }
 
@@ -159,7 +159,7 @@ class InvoiceTest extends TestCase
     {
         $this->assertNull($this->invoice->getPaymentAmount());
 
-        $this->invoice->setPayment($this->paymentData);
+        $this->invoice->setPayment(Payment::updateOrInsert($this->paymentData));
         $this->assertEquals($this->paymentData['payment']['amount'], $this->invoice->getPaymentAmount());
     }
 
@@ -170,7 +170,7 @@ class InvoiceTest extends TestCase
     {
         $this->assertNull($this->invoice->getPaymentStatus());
 
-        $this->invoice->setPayment($this->paymentData);
+        $this->invoice->setPayment(Payment::updateOrInsert($this->paymentData));
         $this->assertEquals(
             PaymentStatus::status($this->paymentData['payment']['state']),
             $this->invoice->getPaymentStatus()
@@ -184,7 +184,7 @@ class InvoiceTest extends TestCase
     {
         $this->assertNull($this->invoice->getPaymentState());
 
-        $this->invoice->setPayment($this->paymentData);
+        $this->invoice->setPayment(Payment::updateOrInsert($this->paymentData));
         $this->assertEquals(
             $this->paymentData['payment']['state'],
             $this->invoice->getPaymentState()

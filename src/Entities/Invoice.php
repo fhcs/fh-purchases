@@ -108,16 +108,10 @@ class Invoice extends Model
     }
 
     /**
-     * @param array $parameters
+     * @param Payment $payment
      */
-    public function setPayment(array $parameters)
+    public function setPayment(Payment $payment)
     {
-        if (array_key_exists('payment', $parameters)) {
-            $parameters = $parameters['payment'];
-        }
-
-        $payment = Payment::updateOrInsert($parameters);
-
         $this->setStatus(
             PaymentStatus::isFinalState($payment->status)
                 ? OrderStatus::TREATED
