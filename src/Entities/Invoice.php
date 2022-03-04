@@ -109,17 +109,15 @@ class Invoice extends Model
 
     /**
      * @param Payment $payment
+     * @return void
      */
-    public function setPayment(Payment $payment)
+    public function setPayment(Payment $payment): void
     {
-        $this->setStatus(
-            PaymentStatus::isFinalState($payment->status)
-                ? OrderStatus::TREATED
-                : OrderStatus::PROCESSING
-        )
-            ->payment()
+        $this->payment()
             ->associate($payment)
             ->save();
+
+        $this->updateStatusByPayment();
     }
 
     /**
@@ -130,15 +128,38 @@ class Invoice extends Model
         return $this->belongsTo(Payment::class);
     }
 
+    public function updateStatusByPayment()
+    {
+        if (!is_null($payment = $this->payment)) {
+            $this->setStatusByPayment($payment);
+        }
+    }
+
+    /**
+     * @param Payment $payment
+     * @return void
+     */
+    public function setStatusByPayment(Payment $payment): void
+    {
+        if (PaymentStatus::isFinalState($payment->status)) {
+            $status = OrderStatus::TREATED;
+            if ($payment->status === PaymentStatus::END) {
+                $status = OrderStatus::PAID;
+            }
+        } else {
+            $status = OrderStatus::PROCESSING;
+        }
+
+        $this->setStatus($status);
+    }
+
     /**
      * @param string $state
-     * @return Invoice
+     * @return void
      */
-    public function setStatus(string $state): Invoice
+    public function setStatus(string $state): void
     {
         self::update(['status' => OrderStatus::status($state)]);
-
-        return $this;
     }
 
     /**

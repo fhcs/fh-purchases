@@ -134,7 +134,7 @@ class InvoiceTest extends TestCase
         $this->assertNotNull($this->invoice->payment);
         $this->assertDatabaseHas('purchase_invoices', [
             'target' => self::TARGET_PAYMENT,
-            'status' => OrderStatus::TREATED,
+            'status' => OrderStatus::PAID,
             'payment_id' => $this->paymentData['payment']['paymentId'],
         ]);
         $this->assertNotEquals(OrderStatus::UNDEF, $this->invoice->status);
