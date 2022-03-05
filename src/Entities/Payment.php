@@ -33,7 +33,7 @@ class Payment extends Model
      * @param string $paymentSystem
      * @return Payment
      */
-    public static function updateOrInsert(array $attributes, string $paymentSystem = ''): Payment
+    public static function updateOrInsert(array $attributes, string $paymentSystem): Payment
     {
         if (array_key_exists('payment', $attributes)) {
             $attributes = $attributes['payment'];
@@ -41,7 +41,7 @@ class Payment extends Model
 
         return self::updateOrCreate([
             'id' => $attributes['paymentId'],
-            'system' => $paymentSystem ?? config('payment.system') ?? '',
+            'system' => $paymentSystem,
         ], [
             'amount' => $attributes['amount'],
             'status' => PaymentStatus::status($attributes['state']),

@@ -13,8 +13,6 @@ class PaymentTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    const PAYMENT_SYSTEM = 'pscb';
-
     /**
      * @var Payment
      */

@@ -11,6 +11,8 @@ use Orchestra\Testbench\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
+    public const PAYMENT_SYSTEM = 'pscb';
+
     public static function assertIsUrl($actual, string $message = '')
     {
         static::assertTrue(!!filter_var($actual, FILTER_VALIDATE_URL), $message);
