@@ -14,7 +14,7 @@ trait ProductPayable
      * @param array $attributes
      * @return PayableProduct
      */
-    private function payableProduct(string $name, float $price, array $attributes = []): PayableProduct
+    protected function payableProduct(string $name, float $price, array $attributes = []): PayableProduct
     {
         return new class($name, $price, $attributes) implements PayableProduct {
 

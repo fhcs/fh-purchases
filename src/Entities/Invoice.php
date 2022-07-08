@@ -235,6 +235,6 @@ class Invoice extends Model
      */
     public function isPaid(): bool
     {
-        return $this->payment && $this->payment->status === PaymentStatus::END;
+        return $this->status === OrderStatus::PAID || $this->payment && $this->payment->status === PaymentStatus::END;
     }
 }
