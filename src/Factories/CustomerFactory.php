@@ -55,8 +55,8 @@ class CustomerFactory
     {
         $validator = Validator::make($attributes, [
             'account' => ['required', 'string'],
-            'phone' => ['required', 'string'],
-            'email' => ['required', 'string'],
+            'phone' => ['string'],
+            'email' => ['string'],
         ]);
 
         if ($validator->fails()) {
