@@ -29,13 +29,13 @@ trait ProductPayable
              */
             public function __construct(string $name, float $price, array $attributes = [])
             {
-                $this->name = $name;
-                $this->price = $price;
-
                 $this->attributes = $attributes;
                 foreach ($this->attributes as $field => $value) {
                     $this->{$field} = $value;
                 }
+
+                $this->name = $name;
+                $this->price = $price;
             }
 
 
@@ -49,7 +49,7 @@ trait ProductPayable
                     'price' => $this->getPrice(),
                 ];
 
-                return array_merge($result, $this->attributes);
+                return array_merge($this->attributes, $result);
             }
 
             public function getName(): string
