@@ -24,26 +24,4 @@ class ProductPayableTest extends TestCase
             'type' => 'test_product'
         ], $product->toArray());
     }
-
-    /**
-     * @test
-     */
-    public function it_can_be_payable_product_with_attributes(): void
-    {
-        $attributes = [
-            'type' => 'test_product',
-            'price' => '100',
-            'name' => 'Test product'
-        ];
-
-        $product = $this->payableProduct('Product test', 100.00, $attributes);
-
-        $this->assertInstanceOf(PayableProduct::class, $product);
-        $this->assertEquals([
-            'name' => 'Product test',
-            'price' => 100.00,
-            'type' => 'test_product'
-        ], $product->toArray());
-        $this->assertEquals(100.00, $product->getPrice());
-    }
 }
