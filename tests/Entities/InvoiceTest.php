@@ -194,6 +194,34 @@ class InvoiceTest extends TestCase
     /**
      * @test
      */
+    public function it_can_be_get_payment_market_place(): void
+    {
+        $this->assertNull($this->invoice->getPaymentMarketPlace());
+
+        $this->invoice->setPayment(Payment::updateOrInsert($this->paymentData, self::PAYMENT_SYSTEM));
+        $this->assertEquals(
+            $this->paymentData['payment']['marketPlace'],
+            $this->invoice->getPaymentMarketPlace()
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_get_payment_recurrency_token(): void
+    {
+        $this->assertNull($this->invoice->getPaymentRecurrencyToken());
+
+        $this->invoice->setPayment(Payment::updateOrInsert($this->paymentData, self::PAYMENT_SYSTEM));
+        $this->assertEquals(
+            $this->paymentData['payment']['recurrencyToken'],
+            $this->invoice->getPaymentRecurrencyToken()
+        );
+    }
+
+    /**
+     * @test
+     */
     public function it_can_be_set_invoice_status(): void
     {
         $this->invoice->setStatus('end');
@@ -277,6 +305,7 @@ class InvoiceTest extends TestCase
                 'marketPlace' => $this->faker->randomNumber(7),
                 'paymentMethod' => 'ac',
                 'stateDate' => $this->faker->dateTime()->format('Y-m-d\TH:i:sP'),
+                'recurrencyToken' => $this->faker->uuid(),
                 'email' => $this->customer->email,
                 'phone' => $this->customer->phone,
                 'details' => 'test',

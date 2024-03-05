@@ -22,6 +22,7 @@ $factory->define(Payment::class, function (Faker $faker) {
         'marketPlace' => $faker->randomNumber(),
         'paymentMethod' => 'ac',
         'stateDate' => $faker->dateTime(),
+        'recurrencyToken' => $faker->uuid(),
         'email' => $faker->email,
         'phone' => $phone,
         'details' => 'test',

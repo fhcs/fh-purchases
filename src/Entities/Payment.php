@@ -48,4 +48,43 @@ class Payment extends Model
             'context' => $attributes,
         ]);
     }
+
+    /**
+     * @return string|null
+     */
+    public function getState(): ?string
+    {
+        $context = $this->context;
+        if (isset($context['state'])) {
+            return $context['state'];
+        }
+
+        return null;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getMarketPlace(): ?int
+    {
+        $context = $this->context;
+        if (isset($context['marketPlace'])) {
+            return $context['marketPlace'];
+        }
+
+        return null;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getRecurrencyToken(): ?string
+    {
+        $context = $this->context;
+        if (isset($context['recurrencyToken'])) {
+            return $context['recurrencyToken'];
+        }
+
+        return null;
+    }
 }

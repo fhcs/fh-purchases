@@ -8,6 +8,8 @@ use Fh\Purchase\Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Str;
+use function PHPUnit\Framework\assertEquals;
+use function PHPUnit\Framework\assertTrue;
 
 class PaymentTest extends TestCase
 {
@@ -37,6 +39,34 @@ class PaymentTest extends TestCase
             'status' => PaymentStatus::status($this->paymentData['state']),
             'context' => json_encode($this->paymentData)
         ]);
+    }
+
+
+    /**
+     * @test
+     */
+    public function testGetState(): void
+    {
+        $payment = $this->payment;
+        assertEquals($payment->getState(), $payment->context['state']);
+    }
+
+    /**
+     * @test
+     */
+    public function testGetMarketPlace(): void
+    {
+        $payment = $this->payment;
+        assertEquals($payment->getMarketPlace(), $payment->context['marketPlace']);
+    }
+
+    /**
+     * @test
+     */
+    public function testGetRecurrencyToken(): void
+    {
+        $payment = $this->payment;
+        assertEquals($payment->getRecurrencyToken(), $payment->context['recurrencyToken']);
     }
 
     protected function setUp(): void

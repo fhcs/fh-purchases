@@ -194,10 +194,31 @@ class Invoice extends Model
     public function getPaymentState(): ?string
     {
         if (!is_null($payment = $this->payment)) {
-            $context = $payment->context;
-            if (isset($context['state'])) {
-                return $context['state'];
-            }
+            return $payment->getState();
+        }
+
+        return null;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPaymentMarketPlace(): ?string
+    {
+        if (!is_null($payment = $this->payment)) {
+            return $payment->getMarketPlace();
+        }
+
+        return null;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPaymentRecurrencyToken(): ?string
+    {
+        if (!is_null($payment = $this->payment)) {
+            return $payment->getRecurrencyToken();
         }
 
         return null;
