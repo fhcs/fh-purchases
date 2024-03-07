@@ -63,9 +63,9 @@ class Payment extends Model
     }
 
     /**
-     * @return string|null
+     * @return int|null
      */
-    public function getMarketPlace(): ?string
+    public function getMarketPlace(): ?int
     {
         $context = $this->context;
         if (isset($context['marketPlace'])) {
