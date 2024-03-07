@@ -201,9 +201,9 @@ class Invoice extends Model
     }
 
     /**
-     * @return int|null
+     * @return int|string|null
      */
-    public function getPaymentMarketPlace(): ?int
+    public function getPaymentMarketPlace()
     {
         if (!is_null($payment = $this->payment)) {
             return $payment->getMarketPlace();

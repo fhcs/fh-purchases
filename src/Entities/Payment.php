@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Fh\Purchase\Entities;
 
 use Fh\Purchase\Enums\PaymentStatus;
@@ -63,9 +61,9 @@ class Payment extends Model
     }
 
     /**
-     * @return int|null
+     * @return int|string|null
      */
-    public function getMarketPlace(): ?int
+    public function getMarketPlace()
     {
         $context = $this->context;
         if (isset($context['marketPlace'])) {
