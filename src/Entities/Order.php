@@ -41,7 +41,12 @@ class Order extends Model
     public function addOrderItem(OrderItem $orderItem): void
     {
         $this->items()->save($orderItem);
-        $this->updateTotalAmount();
+//        dd($orderItem);
+        $this->total += $orderItem->quantity;
+        $this->amount += $orderItem->price * $orderItem->quantity;
+        $this->save();
+
+        $this->refresh();
     }
 
     /**
@@ -50,19 +55,6 @@ class Order extends Model
     public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class, 'order_id', 'uuid');
-    }
-
-    /**
-     * @return void
-     */
-    private function updateTotalAmount(): void
-    {
-        foreach ($this->items as $item) {
-            $this->total += $item->quantity;
-            $this->amount += $item->price * $item->quantity;
-        }
-
-        $this->save();
     }
 
     /**

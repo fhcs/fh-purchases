@@ -37,18 +37,27 @@ class OrderTest extends TestCase
     public function testAddOrderItem()
     {
         $order = Order::create();
-        $order->addOrderItem(OrderItem::create([
+        $product1 = [
             'name' => 'Тестовая услуга',
             'price' => 100.00,
+            'quantity' => 2,
             'details' => ["type" => "test", "name" => "Тестовая услуга", "price" => "100"]
-        ]));
+        ];
+        $product2 = [
+            'name' => 'Тестовая услуга 2',
+            'price' => 200.00,
+            'quantity' => 1,
+            'details' => ["type" => "test", "name" => "Тестовая услуга 2", "price" => "200"]
+        ];
+        $order->addOrderItem(OrderItem::create($product1));
+        $order->addOrderItem(OrderItem::create($product2));
 
-        $this->assertDatabaseCount('purchase_order_items', 1);
+        $this->assertDatabaseCount('purchase_order_items', 2);
         $this->assertInstanceOf(Collection::class, $order->items);
         $this->assertInstanceOf(OrderItem::class, $order->items()->first());
 
-        $this->assertEquals(1, $order->items->count());
-        $this->assertEquals($order->items()->first()->quantity, $order->total);
-        $this->assertEquals($order->items()->first()->quantity * $order->items()->first()->price, $order->amount);
+        $this->assertEquals(2, $order->items->count());
+        $this->assertEquals($product1['quantity'] + $product2['quantity'], $order->total);
+        $this->assertEquals(($product1['quantity'] * $product1['price']) + ($product2['quantity'] * $product2['price']), $order->amount);
     }
 }
