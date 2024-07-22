@@ -29,6 +29,21 @@ class PurchaseService
     }
 
     /**
+     * Генерирует счет на оплату
+     *
+     * @param PayableCustomer $customer
+     * @param array $products
+     * @param string $target
+     * @return Invoice
+     */
+    public function generateInvoice(PayableCustomer $customer, array $products, string $target = ''): Invoice
+    {
+        return tap(InvoiceFactory::generateInvoice($customer, $products, $target), function ($invoice) {
+            event(new InvoiceCreated($invoice));
+        });
+    }
+
+    /**
      * @param string $byOrderId
      * @return Collection|Invoice|null
      */

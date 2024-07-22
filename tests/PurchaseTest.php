@@ -25,11 +25,47 @@ class PurchaseTest extends TestCase
      */
     private $product;
 
+    /**
+     * @var Product[]
+     */
+    private $productsPayable;
+
+    /**
+     * @var array
+     */
+    private $productsArray;
+
     public function testCreateInvoice()
     {
         Event::fake([InvoiceCreated::class]);
 
         $invoice = Purchase::createInvoice($this->customer, $this->product);
+
+        $this->assertDatabaseCount('purchase_invoices', 1);
+        $this->assertInstanceOf(Invoice::class, $invoice);
+        Event::assertDispatched(InvoiceCreated::class, function (InvoiceCreated $event) use ($invoice) {
+            return $event->invoice->order_id === $invoice->getOrderId();
+        });
+    }
+
+    public function testGenerateInvoiceByPayableProducts()
+    {
+        Event::fake([InvoiceCreated::class]);
+
+        $invoice = Purchase::generateInvoice($this->customer, $this->productsPayable);
+
+        $this->assertDatabaseCount('purchase_invoices', 1);
+        $this->assertInstanceOf(Invoice::class, $invoice);
+        Event::assertDispatched(InvoiceCreated::class, function (InvoiceCreated $event) use ($invoice) {
+            return $event->invoice->order_id === $invoice->getOrderId();
+        });
+    }
+
+    public function testGenerateInvoiceByArrayProducts()
+    {
+        Event::fake([InvoiceCreated::class]);
+
+        $invoice = Purchase::generateInvoice($this->customer, $this->productsArray);
 
         $this->assertDatabaseCount('purchase_invoices', 1);
         $this->assertInstanceOf(Invoice::class, $invoice);
@@ -57,5 +93,23 @@ class PurchaseTest extends TestCase
         parent::setUp();
         $this->customer = new People;
         $this->product = new Product;
+        $this->productsPayable = [
+            new Product,
+            new Product,
+        ];
+        $this->productsArray = [
+            [
+                'name' => 'Test product',
+                'price' => 100.00,
+                'description' => 'Testing product',
+                'type' => 'test_product',
+            ],
+            [
+                'name' => 'Test product 2',
+                'price' => 200.00,
+                'description' => 'Testing product 2',
+                'type' => 'test_product_2',
+            ],
+        ];
     }
 }
