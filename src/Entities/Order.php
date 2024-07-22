@@ -41,7 +41,6 @@ class Order extends Model
     public function addOrderItem(OrderItem $orderItem): void
     {
         $this->items()->save($orderItem);
-//        dd($orderItem);
         $this->total += $orderItem->quantity;
         $this->amount += $orderItem->price * $orderItem->quantity;
         $this->save();

@@ -30,7 +30,7 @@ class OrderFactory
      * @param $product
      * @return OrderItem
      */
-    private function createOrderItem($product): OrderItem
+    public function createOrderItem($product): OrderItem
     {
         return OrderItem::create($this->getAttributes($product));
     }
@@ -75,5 +75,20 @@ class OrderFactory
         if ($validator->fails()) {
             throw new \InvalidArgumentException("Невозможно создать OrderItem. Некорректный Product");
         }
+    }
+
+    /**
+     * @param array $products
+     * @return Order
+     */
+    public function generateOrder(array $products): Order
+    {
+        $order = Order::create();
+
+        foreach ($products as $product) {
+            $orderItem = $this->createOrderItem($product);
+            $order->addOrderItem($orderItem);
+        }
+        return $order;
     }
 }

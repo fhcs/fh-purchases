@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static Order createOrder($product)
+ * @method static Order generateOrder(array $products)
  */
 class OrderFactoryFacade extends Facade
 {

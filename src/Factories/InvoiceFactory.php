@@ -34,4 +34,28 @@ class InvoiceFactory
 
         return $invoice;
     }
+
+    /**
+     * @param PayableCustomer $customer
+     * @param array $products
+     * @param string $target
+     *
+     * @return Invoice
+     */
+    public function generateInvoice(PayableCustomer $customer, array $products, string $target = ''): Invoice
+    {
+        $order = OrderFactory::generateOrder($products);
+        $customer = CustomerFactory::defineCustomer($customer);
+
+        $invoice = Invoice::create([
+            'target' => $target,
+            'customer_id' => $customer->getId(),
+            'order_id' => $order->getId(),
+        ]);
+
+        $invoice->order()->associate($order);
+        $invoice->customer()->associate($customer);
+
+        return $invoice;
+    }
 }
