@@ -72,6 +72,12 @@ class OrderStatus
      */
     const CLOSED = 'закрыт';
 
+    /**
+     * Заказ не оплачен.
+     * Заказ создан в ПС со статусом `SENT` (в оплате).
+     * Плательщик перенаправлен в магазин по URL в случае неуспешной оплаты.
+     */
+    const FAILED_PAY = 'не удачная оплата';
 
     const UNDEF = 'не определен';
 
@@ -86,5 +92,6 @@ class OrderStatus
         'closed' => self::CLOSED,
         'error' => self::ERROR,
         'undefined' => self::UNDEF,
+        'failed_pay' => self::FAILED_PAY,
     ];
 }
