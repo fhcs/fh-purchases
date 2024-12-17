@@ -41,6 +41,11 @@ class InvoiceTest extends TestCase
     private $paymentData;
 
     /**
+     * @var Payment
+     */
+    private $payment;
+
+    /**
      * @test
      */
     public function testCreate(): void
@@ -134,11 +139,40 @@ class InvoiceTest extends TestCase
         $this->assertNotNull($this->invoice->payment);
         $this->assertDatabaseHas('purchase_invoices', [
             'target' => self::TARGET_PAYMENT,
-            'status' => OrderStatus::PAID,
+            'status' => $this->invoice->status,
             'payment_id' => $this->paymentData['payment']['paymentId'],
         ]);
         $this->assertNotEquals(OrderStatus::UNDEF, $this->invoice->status);
         $this->assertInstanceOf(Payment::class, $this->invoice->payment);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_update_status_by_payment(): void
+    {
+        $this->invoice->setPayment(Payment::updateOrInsert($this->paymentData, self::PAYMENT_SYSTEM));
+        $this->assertEquals(OrderStatus::NEW, $this->invoice->status);
+
+        $this->invoice->updateStatusByPayment();
+        $this->assertEquals(OrderStatus::PAID, $this->invoice->status);
+    }
+
+    /**
+     * @test
+     */
+    public function it_not_can_be_set_status_if_closed(): void
+    {
+        $invoice = Invoice::create([
+            'status' => OrderStatus::CLOSED,
+            'target' => self::TARGET_PAYMENT,
+            'customer_id' => $this->customer->id,
+            'order_id' => $this->order->uuid,
+            'payment_id' => $this->payment->id
+        ]);
+        $invoice->setPayment(Payment::updateOrInsert($this->paymentData, self::PAYMENT_SYSTEM));
+
+        $this->assertEquals(OrderStatus::CLOSED, $invoice->status);
     }
 
     /**
@@ -311,5 +345,11 @@ class InvoiceTest extends TestCase
                 'details' => 'test',
             ]
         ];
+
+        $this->payment = factory(Payment::class)->create([
+            'system' => self::PAYMENT_SYSTEM,
+            'status' => PaymentStatus::END,
+            'context' => $this->paymentData['payment']
+        ]);
     }
 }

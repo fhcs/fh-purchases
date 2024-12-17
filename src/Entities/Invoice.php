@@ -116,8 +116,6 @@ class Invoice extends Model
         $this->payment()
             ->associate($payment)
             ->save();
-
-        $this->updateStatusByPayment();
     }
 
     /**
